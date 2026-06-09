@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flood Risk Intelligence — Abidjan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:        #08090d;
+      --surface:   #0f1117;
+      --surface2:  #161922;
+      --border:    #1e2433;
+      --accent:    #e63946;
+      --accent2:   #f4a261;
+      --accent3:   #2ec4b6;
+      --text:      #e8eaf0;
+      --muted:     #6b7280;
+      --haut:      #e63946;
+      --moyen:     #f4a261;
+      --faible:    #f9c74f;
+      --safe:      #2ec4b6;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+      height: 60px;
+      background: rgba(8,9,13,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+    .nav-brand .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.5; transform:scale(1.4); }
+    }
+    .nav-links { display:flex; gap:28px; }
+    .nav-links a {
+      text-decoration:none; color:var(--muted);
+      font-size:0.82rem; font-weight:500;
+      letter-spacing:0.5px; text-transform:uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color:var(--text); }
+
+    /* ─── HERO ─────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+      padding: 80px 40px 40px;
+    }
+    .hero-bg {
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(230,57,70,0.12) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 40% at 80% 80%, rgba(46,196,182,0.08) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .hero-content {
+      position:relative; z-index:2;
+      max-width: 900px; text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      padding: 6px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 100px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero-title .line2 { color: var(--accent); display:block; }
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 640px;
+      margin: 0 auto 40px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-cta {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn {
+      padding: 12px 28px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+    }
+    .btn-primary:hover { background: #c1121f; transform: translateY(-2px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--muted); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex; gap: 40px; justify-content: center;
+      margin-top: 64px;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800;
+      color: var(--accent);
+    }
+    .hero-stat-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ─── SECTION WRAPPER ────────────────────────────── */
+    section { padding: 100px 40px; max-width: 1280px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      color: var(--muted); font-size: 1rem;
+      line-height: 1.7; max-width: 640px;
+      margin-bottom: 56px;
+    }
+    .divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ─── QUESTIONS ──────────────────────────────────── */
+    #questions { background: var(--surface); width: 100%; max-width: 100%; }
+    #questions > .inner { max-width: 1280px; margin: 0 auto; padding: 100px 40px; }
+    .questions-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .question-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .question-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .q-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem; font-weight: 800;
+      color: var(--border); margin-bottom: 12px;
+      line-height: 1;
+    }
+    .q-text { font-size: 0.95rem; line-height: 1.6; color: var(--text); }
+
+    /* ─── METHODOLOGY ────────────────────────────────── */
+    .method-steps { display: flex; flex-direction: column; gap: 0; }
+    .method-step {
+      display: grid; grid-template-columns: 60px 1fr;
+      gap: 24px; position: relative; padding-bottom: 40px;
+    }
+    .method-step:last-child { padding-bottom: 0; }
+    .method-step::before {
+      content:'';
+      position: absolute;
+      left: 29px; top: 56px; bottom: 0;
+      width: 2px;
+      background: linear-gradient(var(--border), transparent);
+    }
+    .method-step:last-child::before { display: none; }
+    .step-num {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      color: var(--accent);
+      flex-shrink: 0;
+      background: var(--surface);
+    }
+    .step-content { padding-top: 12px; }
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem; font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+    .step-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .tag {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.72rem; font-weight: 600;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    /* ─── MAP DASHBOARD ──────────────────────────────── */
+    #dashboard { background: var(--surface); width:100%; max-width:100%; }
+    #dashboard > .inner { max-width: 1280px; margin: 0 auto; padding: 100px 40px; }
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 20px;
+      height: 600px;
+    }
+    .dash-sidebar {
+      display: flex; flex-direction: column; gap: 16px;
+      overflow-y: auto;
+    }
+    .dash-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .dash-card-title {
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 14px;
+    }
+    .risk-row {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .risk-row:last-child { border: none; }
+    .risk-badge {
+      padding: 2px 10px; border-radius: 100px;
+      font-size: 0.7rem; font-weight: 700;
+    }
+    .badge-haut   { background: rgba(230,57,70,0.15);  color: var(--haut); }
+    .badge-moyen  { background: rgba(244,162,97,0.15); color: var(--moyen); }
+    .badge-faible { background: rgba(249,199,79,0.15); color: var(--faible); }
+    .badge-safe   { background: rgba(46,196,182,0.15); color: var(--safe); }
+    .risk-val { font-weight: 700; font-size: 0.9rem; }
+
+    #map {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* Layer toggles */
+    .layer-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .layer-item:last-child { border: none; }
+    .layer-left { display: flex; align-items: center; gap: 8px; }
+    .layer-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink:0; }
+    .toggle {
+      width: 36px; height: 20px;
+      background: var(--border); border-radius: 100px;
+      position: relative; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle.on { background: var(--accent); }
+    .toggle::after {
+      content:'';
+      position: absolute;
+      width: 14px; height: 14px;
+      background: white; border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: transform 0.2s;
+    }
+    .toggle.on::after { transform: translateX(16px); }
+
+    /* ─── STATISTICS ─────────────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; margin-bottom: 48px;
+    }
+    .stat-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px;
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:3px;
+    }
+    .stat-card.haut::before   { background: var(--haut); }
+    .stat-card.moyen::before  { background: var(--moyen); }
+    .stat-card.faible::before { background: var(--faible); }
+    .stat-card.safe::before   { background: var(--safe); }
+    .stat-card-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; }
+    .stat-card-val {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.9rem; font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .stat-card.haut   .stat-card-val { color: var(--haut); }
+    .stat-card.moyen  .stat-card-val { color: var(--moyen); }
+    .stat-card.faible .stat-card-val { color: var(--faible); }
+    .stat-card.safe   .stat-card-val { color: var(--safe); }
+    .stat-card-sub { font-size: 0.78rem; color: var(--muted); }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .chart-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px;
+    }
+    .chart-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    /* ─── METADATA ───────────────────────────────────── */
+    #metadata { background: var(--surface); width:100%; max-width:100%; }
+    #metadata > .inner { max-width: 1280px; margin: 0 auto; padding: 100px 40px; }
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .meta-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .meta-table td {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .meta-table tr:hover td { background: var(--surface2); }
+    .meta-link {
+      color: var(--accent3);
+      text-decoration: none;
+      font-size: 0.8rem;
+    }
+    .meta-link:hover { text-decoration: underline; }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 40px;
+      text-align: center;
+    }
+    .footer-brand {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .footer-sub { color: var(--muted); font-size: 0.82rem; line-height: 1.8; }
+
+    /* ─── SCROLLBAR ──────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAV ════════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-brand">
+    <div class="dot"></div>
+    FLOOD RISK INTELLIGENCE
+  </div>
+  <div class="nav-links">
+    <a href="#hero">Accueil</a>
+    <a href="#questions">Problématique</a>
+    <a href="#methodology">Méthodologie</a>
+    <a href="#dashboard">Carte</a>
+    <a href="#statistics">Statistiques</a>
+    <a href="#metadata">Métadonnées</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ════════════════════════════════════════════════ -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">🌊 Projet Géospatial · Géomatique & Data Science</div>
+    <h1 class="hero-title">
+      Analyse du Risque
+      <span class="line2">d'Inondation à Abidjan</span>
+    </h1>
+    <p class="hero-subtitle">
+      Une application géospatiale de gestion de crise combinant données satellitaires,
+      modèles d'élévation et intelligence spatiale pour cartographier, quantifier
+      et visualiser les zones inondables de la capitale économique de Côte d'Ivoire.
+    </p>
+    <div class="hero-cta">
+      <a href="#dashboard" class="btn btn-primary">🗺️ Explorer la carte</a>
+      <a href="#methodology" class="btn btn-ghost">Voir la méthodologie</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val">46,5M</div>
+        <div class="hero-stat-label">Habitants analysés</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">14M</div>
+        <div class="hero-stat-label">En haut risque</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">67 245</div>
+        <div class="hero-stat-label">Bâtiments menacés</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">689</div>
+        <div class="hero-stat-label">Infras. critiques exposées</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══ QUESTIONS ═══════════════════════════════════════════ -->
+<div id="questions">
+  <div class="inner">
+    <p class="section-label">Problématique</p>
+    <h2 class="section-title">Questions auxquelles ce projet répond</h2>
+    <p class="section-desc">
+      Abidjan fait face à des inondations récurrentes, notamment pendant les saisons
+      des pluies (mai–juin et octobre). Ce projet répond à six questions clés pour
+      la gestion de crise urbaine.
+    </p>
+    <div class="questions-grid">
+      <div class="question-card">
+        <div class="q-number">01</div>
+        <div class="q-text">Quelles zones géographiques d'Abidjan présentent le plus haut risque d'inondation selon leur altitude ?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-number">02</div>
+        <div class="q-text">Combien d'habitants sont exposés à chaque niveau de risque (haut, modéré, faible) ?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-number">03</div>
+        <div class="q-text">Quelles infrastructures critiques — hôpitaux, écoles, commissariats — sont situées en zones inondables ?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-number">04</div>
+        <div class="q-text">Combien de bâtiments résidentiels et commerciaux sont directement menacés par une inondation majeure ?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-number">05</div>
+        <div class="q-text">Quels équipements publics (marchés, gares, parcs) seront rendus inaccessibles en cas de crise ?</div>
+      </div>
+      <div class="question-card">
+        <div class="q-number">06</div>
+        <div class="q-text">Comment les données géospatiales multi-sources peuvent-elles être intégrées pour produire un outil d'aide à la décision ?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══ METHODOLOGY ═════════════════════════════════════════ -->
+<section id="methodology">
+  <p class="section-label">Méthodologie</p>
+  <h2 class="section-title">De la donnée au résultat</h2>
+  <p class="section-desc">
+    Une pipeline géospatiale complète en 5 étapes, alliant télédétection,
+    analyse spatiale et visualisation cartographique interactive.
+  </p>
+  <div class="method-steps">
+
+    <div class="method-step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title">Collecte des données multi-sources</div>
+        <div class="step-desc">
+          Acquisition de cinq sources de données complémentaires : le Modèle Numérique de
+          Terrain SRTM GL1 (30m de résolution) depuis OpenTopography avec traitement hydrologique
+          intégré (DEM conditionné, accumulation de flux D8, réseau de drainage vectorisé,
+          Topographic Wetness Index) ; les données de population WorldPop 2020 à 100m de
+          résolution pour la Côte d'Ivoire ; les limites administratives GADM niveau 3 ;
+          les données OpenStreetMap via OSMnx (réseau routier, infrastructures critiques,
+          équipements publics, 392 618 bâtiments) ; et les précipitations mensuelles CHIRPS
+          pour les mois de forte pluie à Abidjan (mai, juin, septembre, octobre 2020).
+        </div>
+        <div class="step-tags">
+          <span class="tag">NASA SRTM GL1</span>
+          <span class="tag">WorldPop 2020</span>
+          <span class="tag">GADM</span>
+          <span class="tag">OSMnx</span>
+          <span class="tag">CHIRPS</span>
+          <span class="tag">Python</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="method-step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title">Préparation et découpage spatial</div>
+        <div class="step-desc">
+          Toutes les données raster (DEM, population, précipitations) ont été découpées
+          (clipping) sur l'emprise géographique d'Abidjan en utilisant les limites GADM
+          comme masque de découpe, via Rasterio et GeoPandas. Le DEM hydrologique conditionné
+          (Hydro_Conditioned_DEM.tif) a été utilisé plutôt que le DEM brut pour garantir
+          la cohérence du réseau de drainage. Les données vectorielles OSM ont été
+          reprojetées en EPSG:4326 pour l'interopérabilité.
+        </div>
+        <div class="step-tags">
+          <span class="tag">Rasterio</span>
+          <span class="tag">GeoPandas</span>
+          <span class="tag">Raster Clipping</span>
+          <span class="tag">EPSG:4326</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="method-step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title">Modélisation des zones de risque</div>
+        <div class="step-desc">
+          Classification du risque d'inondation en trois niveaux basée sur l'altitude
+          extraite du DEM hydrologique : haut risque pour les zones inférieures à 10m
+          (directement exposées aux crues de lagune et aux accumulations d'eau), risque
+          modéré entre 10 et 25m, et faible risque entre 25 et 50m. La carte de risque
+          raster a ensuite été vectorisée (rasterio.features.shapes) pour produire un
+          GeoJSON exploitable dans Leaflet.js. Le choix des seuils est validé par la
+          géomorphologie d'Abidjan : altitude min 2m (bords de lagune), max 146m, moyenne 43m.
+        </div>
+        <div class="step-tags">
+          <span class="tag">NumPy</span>
+          <span class="tag">Classification altimétrique</span>
+          <span class="tag">Vectorisation raster</span>
+          <span class="tag">GeoJSON</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="method-step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title">Croisement avec les données sociales</div>
+        <div class="step-desc">
+          La carte de risque a été croisée avec trois couches sociales : (1) le raster
+          de population WorldPop rééchantillonné à la résolution du DEM via interpolation
+          bilinéaire, permettant d'estimer la population exposée par zone de risque ;
+          (2) les 3 688 infrastructures critiques et 1 250 équipements publics, auxquels
+          un niveau de risque a été assigné par échantillonnage du raster (rasterio.sample) ;
+          (3) les 392 618 bâtiments OSM, classifiés selon leur centroïde. Ce croisement
+          produit les indicateurs d'impact clés du projet.
+        </div>
+        <div class="step-tags">
+          <span class="tag">Raster sampling</span>
+          <span class="tag">Resampling bilinéaire</span>
+          <span class="tag">Jointure spatiale</span>
+          <span class="tag">WorldPop</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="method-step">
+      <div class="step-num">05</div>
+      <div class="step-content">
+        <div class="step-title">Visualisation et dashboard interactif</div>
+        <div class="step-desc">
+          Export de toutes les données traitées en GeoJSON et JSON pour le web.
+          Développement d'un dashboard HTML/CSS/JS complet intégrant : une carte Leaflet.js
+          interactive avec couches activables (zones de risque, infrastructures, équipements),
+          des graphiques Chart.js pour les statistiques de population et d'infrastructure,
+          une section méthodologie, une table de métadonnées sourcées. L'interface adopte
+          un design sombre professionnel avec la typographie Syne/DM Sans.
+        </div>
+        <div class="step-tags">
+          <span class="tag">Leaflet.js</span>
+          <span class="tag">Chart.js</span>
+          <span class="tag">HTML/CSS/JS</span>
+          <span class="tag">GeoJSON</span>
+          <span class="tag">Dashboard</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ MAP DASHBOARD ════════════════════════════════════════ -->
+<div id="dashboard">
+  <div class="inner">
+    <p class="section-label">Carte Interactive</p>
+    <h2 class="section-title">Dashboard Cartographique</h2>
+    <p class="section-desc">
+      Explorez les zones de risque, les infrastructures critiques et les équipements
+      publics d'Abidjan. Activez ou désactivez les couches selon vos besoins.
+    </p>
+
+    <div class="dashboard-layout">
+
+      <!-- Sidebar -->
+      <div class="dash-sidebar">
+
+        <div class="dash-card">
+          <div class="dash-card-title">👥 Population exposée</div>
+          <div class="risk-row">
+            <span>🔴 Haut risque</span>
+            <span class="risk-badge badge-haut">14,0M</span>
+          </div>
+          <div class="risk-row">
+            <span>🟠 Modéré</span>
+            <span class="risk-badge badge-moyen">3,9M</span>
+          </div>
+          <div class="risk-row">
+            <span>🟡 Faible</span>
+            <span class="risk-badge badge-faible">8,7M</span>
+          </div>
+          <div class="risk-row">
+            <span>⚪ Aucun</span>
+            <span class="risk-badge badge-safe">19,8M</span>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-title">🗂️ Couches</div>
+          <div class="layer-item">
+            <div class="layer-left">
+              <div class="layer-dot" style="background:#e63946"></div>
+              <span>Zones de risque</span>
+            </div>
+            <div class="toggle on" id="t-risk" onclick="toggleLayer('risk',this)"></div>
+          </div>
+          <div class="layer-item">
+            <div class="layer-left">
+              <div class="layer-dot" style="background:#58a6ff"></div>
+              <span>Infrastructures critiques</span>
+            </div>
+            <div class="toggle on" id="t-crit" onclick="toggleLayer('crit',this)"></div>
+          </div>
+          <div class="layer-item">
+            <div class="layer-left">
+              <div class="layer-dot" style="background:#2ec4b6"></div>
+              <span>Équipements publics</span>
+            </div>
+            <div class="toggle" id="t-equip" onclick="toggleLayer('equip',this)"></div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-title">📌 Légende</div>
+          <div class="risk-row" style="gap:8px">
+            <div style="width:12px;height:12px;background:#d73027;opacity:0.8;border-radius:2px;flex-shrink:0"></div>
+            <span style="font-size:0.8rem">Haut risque (&lt;10m)</span>
+          </div>
+          <div class="risk-row" style="gap:8px">
+            <div style="width:12px;height:12px;background:#fc8d59;opacity:0.8;border-radius:2px;flex-shrink:0"></div>
+            <span style="font-size:0.8rem">Risque modéré (10–25m)</span>
+          </div>
+          <div class="risk-row" style="gap:8px">
+            <div style="width:12px;height:12px;background:#fee08b;opacity:0.8;border-radius:2px;flex-shrink:0"></div>
+            <span style="font-size:0.8rem">Faible risque (25–50m)</span>
+          </div>
+          <div class="risk-row" style="gap:8px">
+            <div style="width:12px;height:12px;background:#58a6ff;border-radius:50%;flex-shrink:0"></div>
+            <span style="font-size:0.8rem">Infrastructure critique</span>
+          </div>
+          <div class="risk-row" style="gap:8px">
+            <div style="width:12px;height:12px;background:#2ec4b6;border-radius:50%;flex-shrink:0"></div>
+            <span style="font-size:0.8rem">Équipement public</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Map -->
+      <div id="map"></div>
+
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══ STATISTICS ═══════════════════════════════════════════ -->
+<section id="statistics">
+  <p class="section-label">Statistiques</p>
+  <h2 class="section-title">Résultats quantifiés</h2>
+  <p class="section-desc">
+    Synthèse des indicateurs d'exposition au risque d'inondation
+    pour la population, les infrastructures et le bâti d'Abidjan.
+  </p>
+
+  <div class="stats-grid">
+    <div class="stat-card haut">
+      <div class="stat-card-label">Population en haut risque</div>
+      <div class="stat-card-val">14,0M</div>
+      <div class="stat-card-sub">30% de la population totale</div>
+    </div>
+    <div class="stat-card moyen">
+      <div class="stat-card-label">Infrastructures critiques exposées</div>
+      <div class="stat-card-val">689</div>
+      <div class="stat-card-sub">hôpitaux, écoles, commissariats en zone rouge</div>
+    </div>
+    <div class="stat-card faible">
+      <div class="stat-card-label">Bâtiments en haut risque</div>
+      <div class="stat-card-val">67 245</div>
+      <div class="stat-card-sub">sur 392 618 bâtiments cartographiés</div>
+    </div>
+    <div class="stat-card safe">
+      <div class="stat-card-label">Équipements publics menacés</div>
+      <div class="stat-card-val">286</div>
+      <div class="stat-card-sub">marchés, gares, stations en zone rouge</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Population par zone de risque</div>
+      <canvas id="chartPop"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Infrastructures critiques par zone</div>
+      <canvas id="chartInfra"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Bâtiments menacés par zone</div>
+      <canvas id="chartBat"></canvas>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══ METADATA ════════════════════════════════════════════ -->
+<div id="metadata">
+  <div class="inner">
+    <p class="section-label">Métadonnées</p>
+    <h2 class="section-title">Sources de données</h2>
+    <p class="section-desc">
+      Toutes les données utilisées dans ce projet sont librement accessibles.
+      Voici les références complètes de chaque source.
+    </p>
+    <table class="meta-table">
+      <thead>
+        <tr>
+          <th>Donnée</th>
+          <th>Source</th>
+          <th>Résolution</th>
+          <th>Année</th>
+          <th>Format</th>
+          <th>Lien</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Modèle Numérique de Terrain</strong><br><span style="color:var(--muted);font-size:0.8rem">NASA SRTM GL1 — DEM hydrologique conditionné avec accumulation de flux D8, TWI et réseau de drainage</span></td>
+          <td>NASA / USGS via OpenTopography</td>
+          <td>30m (1 arc-seconde)</td>
+          <td>2000</td>
+          <td>GeoTIFF</td>
+          <td><a class="meta-link" href="https://portal.opentopography.org/raster?opentopoID=OTSRTM.082015.4326.1" target="_blank">OpenTopography ↗</a></td>
+        </tr>
+        <tr>
+          <td><strong>Population</strong><br><span style="color:var(--muted);font-size:0.8rem">WorldPop — population résidentielle estimée par pixel</span></td>
+          <td>University of Southampton — WorldPop</td>
+          <td>100m</td>
+          <td>2020</td>
+          <td>GeoTIFF</td>
+          <td><a class="meta-link" href="https://hub.worldpop.org/geodata/listing?id=29" target="_blank">WorldPop Hub ↗</a></td>
+        </tr>
+        <tr>
+          <td><strong>Limites administratives</strong><br><span style="color:var(--muted);font-size:0.8rem">GADM niveau 3 — communes d'Abidjan</span></td>
+          <td>GADM — Global Administrative Areas</td>
+          <td>Vecteur</td>
+          <td>2022</td>
+          <td>GeoPackage</td>
+          <td><a class="meta-link" href="https://gadm.org/download_country.html" target="_blank">GADM ↗</a></td>
+        </tr>
+        <tr>
+          <td><strong>Réseau routier & Bâtiments</strong><br><span style="color:var(--muted);font-size:0.8rem">OSMnx — 392 618 bâtiments, réseau routier, POIs</span></td>
+          <td>OpenStreetMap via OSMnx (Python)</td>
+          <td>Vecteur</td>
+          <td>2024</td>
+          <td>GeoJSON / GraphML</td>
+          <td><a class="meta-link" href="https://www.openstreetmap.org" target="_blank">OpenStreetMap ↗</a></td>
+        </tr>
+        <tr>
+          <td><strong>Précipitations mensuelles</strong><br><span style="color:var(--muted);font-size:0.8rem">CHIRPS v2.0 — mois de forte pluie : mai, juin, sept, oct 2020</span></td>
+          <td>UCSB Climate Hazards Group — CHIRPS</td>
+          <td>0.05° (~5km)</td>
+          <td>2020</td>
+          <td>GeoTIFF</td>
+          <td><a class="meta-link" href="https://data.chc.ucsb.edu/products/CHIRPS-2.0/africa_monthly/tifs/" target="_blank">CHIRPS Data ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-brand">🌊 FLOOD RISK INTELLIGENCE — ABIDJAN</div>
+  <div class="footer-sub">
+    Développé par <strong>Valentin KODJO Kablan</strong> · Licence Pro Géomatique & Stratégies Spatiales<br>
+    Université Félix Houphouët-Boigny (UFHB) · Cocody, Abidjan, Côte d'Ivoire<br>
+    Données : NASA SRTM · WorldPop · OpenStreetMap · CHIRPS · GADM
+  </div>
+</footer>
+
+<!-- ══ SCRIPTS ══════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ── MAP ────────────────────────────────────────────────────
+const map = L.map('map', {
+  center: [5.3600, -4.0083],
+  zoom: 11,
+  zoomControl: true
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CARTO', maxZoom: 19
+}).addTo(map);
+
+let layers = { risk: null, crit: null, equip: null };
+
+// ── Zones de risque ─────────────────────────────────────────
+fetch('assets/data/flood_risk.geojson')
+  .then(r => r.json())
+  .then(data => {
+    layers.risk = L.geoJSON(data, {
+      style: f => ({
+        fillColor: f.properties.color,
+        fillOpacity: 0.55,
+        color: 'none', weight: 0
+      }),
+      onEachFeature: (f, layer) => {
+        const alt = f.properties.risk_level === 3 ? '<10m' :
+                    f.properties.risk_level === 2 ? '10–25m' : '25–50m';
+        layer.bindPopup(`<b>${f.properties.risk_label}</b><br>Altitude : ${alt}`);
+      }
+    }).addTo(map);
+  })
+  .catch(() => console.log('flood_risk.geojson non trouvé — lancez le serveur depuis /web'));
+
+// ── Icônes ──────────────────────────────────────────────────
+function makeIcon(color, emoji) {
+  return L.divIcon({
+    html: `<div style="background:${color};width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid rgba(255,255,255,0.6);box-shadow:0 2px 8px rgba(0,0,0,0.6)">${emoji}</div>`,
+    className: '', iconSize: [22,22], iconAnchor: [11,11]
+  });
+}
+
+const emojiMap = {
+  hospital:'🏥', clinic:'🏥', school:'🏫', university:'🎓',
+  fire_station:'🚒', police:'👮', pharmacy:'💊', place_of_worship:'⛪'
+};
+
+// ── Infrastructures critiques ────────────────────────────────
+fetch('assets/data/critiques.geojson')
+  .then(r => r.json())
+  .then(data => {
+    layers.crit = L.geoJSON(data, {
+      pointToLayer: (f, ll) => {
+        const c = f.properties.risk_level === 3 ? '#e63946' :
+                  f.properties.risk_level === 2 ? '#f4a261' : '#58a6ff';
+        return L.marker(ll, { icon: makeIcon(c, emojiMap[f.properties.amenity] || '📍') });
+      },
+      onEachFeature: (f, layer) => {
+        layer.bindPopup(`
+          <b>${f.properties.name || 'Sans nom'}</b><br>
+          Type : ${f.properties.amenity || 'N/A'}<br>
+          Risque : <b>${f.properties.risk_label || 'N/A'}</b>
+        `);
+      }
+    }).addTo(map);
+  })
+  .catch(() => {});
+
+// ── Équipements ──────────────────────────────────────────────
+fetch('assets/data/equipements.geojson')
+  .then(r => r.json())
+  .then(data => {
+    layers.equip = L.geoJSON(data, {
+      pointToLayer: (f, ll) =>
+        L.marker(ll, { icon: makeIcon('#2ec4b6', '🏪') }),
+      onEachFeature: (f, layer) => {
+        layer.bindPopup(`<b>${f.properties.name || 'Sans nom'}</b><br>Risque : ${f.properties.risk_label || 'N/A'}`);
+      }
+    });
+  })
+  .catch(() => {});
+
+// ── Toggle couches ───────────────────────────────────────────
+function toggleLayer(id, el) {
+  el.classList.toggle('on');
+  const l = layers[id];
+  if (!l) return;
+  el.classList.contains('on') ? map.addLayer(l) : map.removeLayer(l);
+}
+
+// ── CHARTS ──────────────────────────────────────────────────
+Chart.defaults.color = '#6b7280';
+Chart.defaults.borderColor = '#1e2433';
+const chartOpts = (labels, data, colors) => ({
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [{ data, backgroundColor: colors, borderRadius: 6, borderSkipped: false }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: '#1e2433' } },
+      y: { grid: { color: '#1e2433' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('chartPop'), chartOpts(
+  ['Haut risque', 'Modéré', 'Faible', 'Aucun'],
+  [14031523, 3943139, 8729421, 19783252],
+  ['#e63946', '#f4a261', '#f9c74f', '#2ec4b6']
+));
+
+new Chart(document.getElementById('chartInfra'), chartOpts(
+  ['Haut risque', 'Modéré', 'Faible', 'Aucun'],
+  [689, 180, 811, 2008],
+  ['#e63946', '#f4a261', '#f9c74f', '#2ec4b6']
+));
+
+new Chart(document.getElementById('chartBat'), chartOpts(
+  ['Haut risque', 'Modéré', 'Faible', 'Aucun'],
+  [67245, 27193, 76550, 221629],
+  ['#e63946', '#f4a261', '#f9c74f', '#2ec4b6']
+));
+</script>
+
+</body>
+</html>

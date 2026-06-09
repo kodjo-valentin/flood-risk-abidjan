@@ -1,0 +1,14 @@
+cache/
+__pycache__/
+*.pyc
+
+# Raw source data and generated outputs that are too large for GitHub
+data/raw/
+data/processed/
+maps/
+
+# Keep only the lightweight web-ready assets
+!web/assets/data/
+!web/assets/data/*.js
+!web/assets/data/*.json
+!web/assets/data/*.geojson

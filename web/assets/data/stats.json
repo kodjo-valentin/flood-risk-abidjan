@@ -1,0 +1,26 @@
+{
+  "population": {
+    "total": 46487336,
+    "haut_risque": 14031523,
+    "moyen_risque": 3943139,
+    "faible_risque": 8729421
+  },
+  "infrastructures": {
+    "total": 3688,
+    "haut_risque": 689,
+    "moyen_risque": 180,
+    "faible_risque": 811
+  },
+  "equipements": {
+    "total": 1250,
+    "haut_risque": 286,
+    "moyen_risque": 81,
+    "faible_risque": 262
+  },
+  "batiments": {
+    "total": 392618,
+    "haut_risque": 67245,
+    "moyen_risque": 27193,
+    "faible_risque": 76550
+  }
+}
