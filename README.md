@@ -1,6 +1,7 @@
 # Flood Risk Intelligence in Abidjan
 
 > **Application géospatiale de gestion de crise · Analyse du risque d'inondation à Abidjan, Côte d'Ivoire**
+
 > Cliquez ici pour visualiser l'application: https://kodjo-valentin.github.io/flood-risk-abidjan/
 
 [![Python](https://img.shields.io/badge/Python-3.14-blue?style=flat-square&logo=python)](https://python.org)
