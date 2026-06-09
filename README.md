@@ -9,8 +9,8 @@
 
 ---
 
-<!-- 📸 IMAGE : Capture d'écran du hero du dashboard (section accueil avec la carte visible) -->
-<!-- Chemin suggéré : docs/screenshots/hero_dashboard.png -->
+<img width="1356" height="630" alt="Screenshot 2026-06-09 195448" src="https://github.com/user-attachments/assets/eb5ae69a-323a-4730-b38c-59e24b5db15d" />
+
 
 ---
 
@@ -39,8 +39,8 @@ Face à cette réalité récurrente, les autorités et les acteurs humanitaires 
 
 ---
 
-<!-- 📸 IMAGE : Capture d'écran de la carte interactive avec les zones de risque visibles (rouge/orange/jaune) -->
-<!-- Chemin suggéré : docs/screenshots/map_risk_zones.png -->
+<img width="1352" height="626" alt="Screenshot 2026-06-09 195419" src="https://github.com/user-attachments/assets/97366af3-6e1d-4b83-9e31-8d2d6ba76c7d" />
+
 
 ---
 
@@ -247,11 +247,11 @@ Toutes les données utilisées sont **librement accessibles** et **open source**
 
 ## 👤 Auteur
 
-**Valentin KODJO Kablan Martial**  
+**KODJO Kablan Valentin Martial**  
 Licence Professionnelle — Géomatique & Stratégies Spatiales  
 Université Félix Houphouët-Boigny (UFHB) · Cocody, Abidjan, Côte d'Ivoire
 
-[![GitHub](https://img.shields.io/badge/GitHub-votre--username-black?style=flat-square&logo=github)](https://github.com/votre-username)
+[![GitHub]https://github.com/kodjo-valentin/flood-risk-abidjan/edit/main/README.md
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Valentin%20KODJO-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/votre-profil)
 
 ---
