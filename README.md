@@ -1,4 +1,4 @@
-# Flood Risk Intelligence — Abidjan
+# Flood Risk Intelligence in Abidjan
 
 > **Application géospatiale de gestion de crise · Analyse du risque d'inondation à Abidjan, Côte d'Ivoire**
 
@@ -7,16 +7,24 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 [![Data](https://img.shields.io/badge/Data-Open%20Source-orange?style=flat-square)](https://openstreetmap.org)
 
----
-
-<img width="1356" height="630" alt="Screenshot 2026-06-09 195448" src="https://github.com/user-attachments/assets/eb5ae69a-323a-4730-b38c-59e24b5db15d" />
 
 
----
-
-## 🎯 Contexte & Motivation
+## Contexte & Motivation
 
 Abidjan, capitale économique de la Côte d'Ivoire avec plus de **6 millions d'habitants**, est confrontée chaque année à des inondations dévastatrices lors des saisons des pluies (mai–juin et septembre–octobre). En **juin 2026**, des pluies torrentielles ont provoqué des inondations majeures dans plusieurs communes du District Autonome d'Abidjan, contraignant le Premier Ministre Robert Beugré Mambé à décréter des **mesures d'urgence** pour rétablir la circulation et sécuriser les populations. Des immeubles ont présenté des signes d'effondrement à Bingerville, des routes ont été coupées, et des milliers de ménages ont été sinistrés.
+
+## Preuves terrain : Documentation visuelle des points critiques et des zones sinistrées à Abidjan
+## Une approche plus purement scientifique, idéale pour introduire une galerie d'images techniques.
+
+
+
+<img width="649" height="624" alt="Screenshot (7)" src="https://github.com/user-attachments/assets/f6efbad8-35c9-4f36-a7f5-938f46dc1728" />
+<img width="753" height="508" alt="Screenshot (6)" src="https://github.com/user-attachments/assets/6e298d17-4e69-4cce-8c48-98146d39c01c" />
+<img width="715" height="452" alt="Screenshot (5)" src="https://github.com/user-attachments/assets/8802a3e2-0f36-4a44-a191-0b9e1bbad6cb" />
+<img width="753" height="478" alt="Screenshot (4)" src="https://github.com/user-attachments/assets/ec6358a1-b9c8-4448-bd42-dc78d756e1f0" />
+<img width="979" height="533" alt="Screenshot (3)" src="https://github.com/user-attachments/assets/b5a0334f-5db7-4982-8591-f4d4e41773c9" />
+
+
 
 Face à cette réalité récurrente, les autorités et les acteurs humanitaires manquent d'outils géospatiaux précis pour **anticiper les zones à risque**, **localiser les infrastructures menacées** et **quantifier les populations exposées** avant qu'une crise ne survienne.
 
@@ -44,7 +52,7 @@ Face à cette réalité récurrente, les autorités et les acteurs humanitaires 
 
 ---
 
-## 🗂️ Structure du Projet
+## Structure du Projet
 
 ```
 flood-risk-abidjan/
@@ -90,7 +98,7 @@ flood-risk-abidjan/
 
 ---
 
-## ⚙️ Méthodologie
+## Méthodologie
 
 ### Étape 1 — Collecte des données multi-sources
 
@@ -146,7 +154,7 @@ Export des données en GeoJSON simplifié et développement d'un dashboard HTML/
 
 ---
 
-## 🚀 Installation & Lancement
+## Installation & Lancement
 
 ### Prérequis
 
@@ -204,7 +212,7 @@ shapely
 
 ---
 
-## 🗺️ Dashboard Interactif
+## Dashboard Interactif
 
 Le dashboard comprend 6 sections :
 
@@ -220,7 +228,7 @@ Le dashboard comprend 6 sections :
 
 ---
 
-## 📦 Sources de Données
+## Sources de Données
 
 | Donnée | Organisation | Lien | Format | Année |
 |---|---|---|---|---|
@@ -234,7 +242,7 @@ Toutes les données utilisées sont **librement accessibles** et **open source**
 
 ---
 
-## 🔭 Perspectives d'Amélioration
+## Perspectives d'Amélioration
 
 - [ ] Intégration de données historiques d'inondations (événements réels)
 - [ ] Modélisation hydrodynamique (FIM — Flood Inundation Mapping)
@@ -245,18 +253,18 @@ Toutes les données utilisées sont **librement accessibles** et **open source**
 
 ---
 
-## 👤 Auteur
+## Auteur
 
 **KODJO Kablan Valentin Martial**  
 Licence Professionnelle — Géomatique & Stratégies Spatiales  
 Université Félix Houphouët-Boigny (UFHB) · Cocody, Abidjan, Côte d'Ivoire
 
-[![GitHub]https://github.com/kodjo-valentin/flood-risk-abidjan/edit/main/README.md
+[![GitHub]https://github.com/kodjo-valentin/flood-risk-abidjan
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Valentin%20KODJO-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/votre-profil)
 
 ---
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous licence MIT. Les données utilisées sont soumises aux licences de leurs sources respectives (NASA, WorldPop, OpenStreetMap ODbL, GADM, CHIRPS).
 
