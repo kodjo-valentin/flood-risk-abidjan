@@ -144,8 +144,8 @@ Faible risque →  25m – 50m        (zones relativement élevées)
 - **Infrastructures critiques** : 3 688 POIs (hôpitaux, écoles, commissariats...) auxquels un niveau de risque est assigné par échantillonnage raster (`rasterio.sample`)
 - **Bâtiments** : 392 618 bâtiments OSM classifiés selon le centroïde de leur géométrie
 
-<!-- 📸 IMAGE : Graphique en barres (infrastructure_risk.png) montrant les 3 catégories par zone de risque -->
-<!-- Chemin suggéré : docs/screenshots/infrastructure_risk.png -->
+<img width="2384" height="732" alt="infrastructure_risk" src="https://github.com/user-attachments/assets/fb89e2ff-2983-4126-bb72-5a250e6cbfce" />
+
 
 ### Étape 5 — Dashboard interactif
 
