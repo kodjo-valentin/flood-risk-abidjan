@@ -260,8 +260,9 @@ Toutes les données utilisées sont **librement accessibles** et **open source**
 Licence Professionnelle en Géomatique & Stratégies Spatiales  
 Université Félix Houphouët-Boigny (UFHB) · Cocody, Abidjan, Côte d'Ivoire
 
-[![GitHub]https://github.com/kodjo-valentin/flood-risk-abidjan
-[![LinkedIn]https://www.linkedin.com/in/kablan-valentin-martial-kodjo-154993311/
+[GitHub]https://github.com/kodjo-valentin/flood-risk-abidjan
+
+[LinkedIn]https://www.linkedin.com/in/kablan-valentin-martial-kodjo-154993311/
 
 ---
 
