@@ -13,8 +13,7 @@
 
 Abidjan, capitale économique de la Côte d'Ivoire avec plus de **6 millions d'habitants**, est confrontée chaque année à des inondations dévastatrices lors des saisons des pluies (mai–juin et septembre–octobre). En **juin 2026**, des pluies torrentielles ont provoqué des inondations majeures dans plusieurs communes du District Autonome d'Abidjan, contraignant le Premier Ministre Robert Beugré Mambé à décréter des **mesures d'urgence** pour rétablir la circulation et sécuriser les populations. Des immeubles ont présenté des signes d'effondrement à Bingerville, des routes ont été coupées, et des milliers de ménages ont été sinistrés.
 
-## Preuves terrain : Documentation visuelle des points critiques et des zones sinistrées à Abidjan
-## Une approche plus purement scientifique, idéale pour introduire une galerie d'images techniques.
+## La réalité du terrain : Impact visuel et vulnérabilité des infrastructures lors de la crise de juin 2026
 
 
 
@@ -28,7 +27,7 @@ Abidjan, capitale économique de la Côte d'Ivoire avec plus de **6 millions d'h
 
 Face à cette réalité récurrente, les autorités et les acteurs humanitaires manquent d'outils géospatiaux précis pour **anticiper les zones à risque**, **localiser les infrastructures menacées** et **quantifier les populations exposées** avant qu'une crise ne survienne.
 
-**Ce projet répond à ce besoin** en construisant une pipeline géospatiale complète — de la donnée satellitaire brute à un dashboard interactif — pour transformer les données en intelligence opérationnelle de gestion de crise.
+**Ce projet répond à ce besoin** en construisant une pipeline géospatiale complète  de la donnée satellitaire brute à un dashboard interactif pour transformer les données en intelligence opérationnelle de gestion de crise.
 
 ---
 
@@ -136,8 +135,8 @@ Faible risque →  25m – 50m        (zones relativement élevées)
 
 > Validation : altitude min Abidjan = 2m (lagune), max = 146m, moyenne = 43m
 
-<!-- 📸 IMAGE : Les deux cartes côte à côte (DEM relief + zones de risque) générées par matplotlib -->
-<!-- Chemin suggéré : docs/screenshots/dem_vs_risk.png -->
+<img width="2062" height="883" alt="flood_risk_abidjan" src="https://github.com/user-attachments/assets/37915b91-b0c0-4fbf-883c-3f9e744a40b2" />
+
 
 ### Étape 4 — Croisement avec les données sociales
 
@@ -223,8 +222,8 @@ Le dashboard comprend 6 sections :
 - **Statistiques** — graphiques Chart.js (population, infrastructures, bâtiments par zone)
 - **Métadonnées** — sources complètes avec liens
 
-<!-- 📸 IMAGE : Capture d'écran complète du dashboard avec la carte et les statistiques visibles -->
-<!-- Chemin suggéré : docs/screenshots/full_dashboard.png -->
+<img width="1356" height="630" alt="Screenshot 2026-06-09 195448" src="https://github.com/user-attachments/assets/c43d9029-d3ed-4be2-8cde-9716c67daab7" />
+
 
 ---
 
@@ -256,11 +255,11 @@ Toutes les données utilisées sont **librement accessibles** et **open source**
 ## Auteur
 
 **KODJO Kablan Valentin Martial**  
-Licence Professionnelle — Géomatique & Stratégies Spatiales  
+Licence Professionnelle en Géomatique & Stratégies Spatiales  
 Université Félix Houphouët-Boigny (UFHB) · Cocody, Abidjan, Côte d'Ivoire
 
 [![GitHub]https://github.com/kodjo-valentin/flood-risk-abidjan
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Valentin%20KODJO-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/votre-profil)
+[![LinkedIn]https://www.linkedin.com/in/kablan-valentin-martial-kodjo-154993311/
 
 ---
 
@@ -270,4 +269,4 @@ Ce projet est sous licence MIT. Les données utilisées sont soumises aux licenc
 
 ---
 
-> *"Les inondations à Abidjan ne sont pas une fatalité — elles sont une équation géospatiale que la donnée peut résoudre."*
+> *"Les inondations à Abidjan ne sont pas une fatalité elles sont une équation géospatiale que la donnée peut résoudre."*
